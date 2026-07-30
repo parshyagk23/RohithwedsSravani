@@ -240,24 +240,59 @@
     }
 
     .door.l {
-      border-right: 2px solid var(--gold-zari);
-      background-position: 0 0, left top;
+      border-right: 1.5px solid var(--gold-zari);
+      background-position: 0 0, 0% 0%;
     }
 
     .door.r {
-      border-left: 2px solid var(--gold-zari);
-      background-position: 0 0, right top;
+      border-left: 1.5px solid var(--gold-zari);
+      background-position: 0 0, 100% 0%;
+    }
+
+    .door-title-arch {
+      position: absolute;
+      top: 14.5%;
+      z-index: 5;
+      font-family: 'Great Vibes', cursive;
+      font-size: 2.1rem;
+      color: #FFFDF5;
+      text-shadow: 0 4px 15px rgba(0, 0, 0, 0.98), 0 0 20px var(--gold-zari);
+      white-space: nowrap;
+      pointer-events: none;
+      background: rgba(20, 2, 5, 0.65);
+      backdrop-filter: blur(4px);
+      padding: 0.2rem 0.6rem;
+      border-radius: 8px;
+      border: 1px solid rgba(242, 184, 16, 0.4);
+    }
+
+    .door-title-arch.left {
+      right: 8px;
+    }
+
+    .door-title-arch.right {
+      left: 8px;
     }
 
     @media (max-width: 600px) {
       .door {
-        background-size: 44px 44px, 240% 100% !important;
+        background-size: 44px 44px, 200% 100% !important;
       }
       .door.l {
-        background-position: 0 0, left top !important;
+        background-position: 0 0, 0% 0% !important;
       }
       .door.r {
-        background-position: 0 0, right top !important;
+        background-position: 0 0, 100% 0% !important;
+      }
+      .door-title-arch {
+        font-size: 1.5rem;
+        top: 15.5%;
+      }
+      .door-title-arch.left {
+        right: 4px;
+      }
+      .door-title-arch.right {
+        left: 4px;
       }
     }
 
@@ -331,7 +366,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: .8rem;
+      gap: .4rem;
       cursor: pointer;
       transition: opacity .5s ease, transform .5s ease;
     }
@@ -343,29 +378,29 @@
     }
 
     #seal {
-      width: 110px;
-      height: 110px;
+      width: 76px;
+      height: 76px;
       border-radius: 50%;
       background: radial-gradient(circle at 35% 30%, #9E1B2A, var(--mandap-red) 70%);
-      border: 2px solid var(--gold-pale);
+      border: 1.5px solid var(--gold-pale);
       outline: 1.5px solid var(--gold-zari);
-      outline-offset: 3px;
+      outline-offset: 2px;
       color: var(--gold-pale);
       font-family: 'Great Vibes', cursive;
-      font-size: 2.2rem;
+      font-size: 1.5rem;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.9), 0 0 25px rgba(242, 184, 16, 0.35);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.9), 0 0 18px rgba(242, 184, 16, 0.35);
       animation: sealPulse 2.4s ease-in-out infinite;
     }
 
     #seal span.om {
-      font-size: 1.1rem;
+      font-size: 0.8rem;
       color: var(--gold-zari);
       line-height: 1;
-      margin-bottom: -3px;
+      margin-bottom: -2px;
     }
 
     @keyframes sealPulse {
@@ -1434,8 +1469,12 @@
 
   <!-- Doors Intro: South Indian Royal Darbar Entrance -->
   <div id="doors" onclick="unlockDoors(event)">
-    <div class="door l"></div>
-    <div class="door r"></div>
+    <div class="door l">
+      <div class="door-title-arch left">Rohith</div>
+    </div>
+    <div class="door r">
+      <div class="door-title-arch right">&amp; Sravani</div>
+    </div>
     <div id="sealWrap">
       <button id="seal" aria-label="Open invitation"><span class="om">ॐ</span>R &amp; S</button>
       <div class="tap">✦ &nbsp;Tap to open&nbsp; ✦</div>
@@ -1777,8 +1816,7 @@
       if (bgMusic) {
         bgMusic.play().then(() => {
           if (audioBtn) audioBtn.classList.remove('paused');
-        }).catch(err => {
-          console.log('Audio Autoplay:', err);
+        }).catch(() => {
           if (audioBtn) audioBtn.classList.add('paused');
         });
       }
@@ -1939,61 +1977,71 @@
       }
     });
 
-    // Global Realtime API Endpoint for cross-device synchronization
-    const PUBLIC_GLOBAL_API = 'https://api.counterapi.dev/v1/rohithwedsravani_wedding';
+    // Zero-CORS JSONP script helper (never throws CORS errors in any browser)
+    function jsonpFetch(url) {
+      return new Promise((resolve) => {
+        const callbackName = 'jsonp_cb_' + Math.random().toString(36).substr(2, 9);
+        const script = document.createElement('script');
+        script.src = url + (url.includes('?') ? '&' : '?') + 'callback=' + callbackName;
+        window[callbackName] = (data) => {
+          try { delete window[callbackName]; } catch (e) {}
+          if (script.parentNode) script.parentNode.removeChild(script);
+          resolve(data);
+        };
+        script.onerror = () => {
+          try { delete window[callbackName]; } catch (e) {}
+          if (script.parentNode) script.parentNode.removeChild(script);
+          resolve(null);
+        };
+        document.body.appendChild(script);
+      });
+    }
+
+    // Global Realtime CountAPI Endpoints (100% CORS enabled worldwide)
+    const COUNTAPI_NAMESPACE = 'rohithwedsravani_wedding_v2';
 
     // Fetch live scores from Global API / Google Sheet Endpoint
     async function fetchLiveScores() {
-      // Skip network fetch if running off local file:// protocol to avoid browser CORS logs
       if (window.location.protocol === 'file:') return;
 
-      // 1. Try Google Sheet if configured
+      // 1. Try Google Sheet JSONP
       if (CONFIG.googleSheetUrl) {
         try {
-          const res = await fetch(CONFIG.googleSheetUrl + '?action=getScores', { mode: 'cors' });
-          if (res.ok) {
-            const data = await res.json();
-            if (data && typeof data.bride === 'number' && typeof data.groom === 'number') {
-              brideScore = data.bride;
-              groomScore = data.groom;
-              updateBattleBar();
-              saveScoresToDB(brideScore, groomScore);
-              return;
-            }
+          const data = await jsonpFetch(CONFIG.googleSheetUrl + '?action=getScores');
+          if (data && typeof data.bride === 'number' && typeof data.groom === 'number') {
+            brideScore = data.bride;
+            groomScore = data.groom;
+            updateBattleBar();
+            saveScoresToDB(brideScore, groomScore);
+            return;
           }
-        } catch (err) { }
+        } catch (err) {}
       }
 
-      // 2. Global Public Realtime API (works across ALL guest devices worldwide when hosted)
+      // 2. Global Public Realtime CountAPI (zero-CORS)
       try {
-        const [bRes, gRes] = await Promise.all([
-          fetch(PUBLIC_GLOBAL_API + '/bride', { mode: 'cors' }).catch(() => null),
-          fetch(PUBLIC_GLOBAL_API + '/groom', { mode: 'cors' }).catch(() => null)
+        const [bData, gData] = await Promise.all([
+          jsonpFetch(`https://api.countapi.xyz/get/${COUNTAPI_NAMESPACE}/bride`),
+          jsonpFetch(`https://api.countapi.xyz/get/${COUNTAPI_NAMESPACE}/groom`)
         ]);
-        if (bRes && bRes.ok) {
-          const bData = await bRes.json();
-          if (bData && typeof bData.count === 'number') {
-            brideScore = Math.max(brideScore, bData.count);
-          }
+        if (bData && typeof bData.value === 'number') {
+          brideScore = Math.max(brideScore, bData.value);
         }
-        if (gRes && gRes.ok) {
-          const gData = await gRes.json();
-          if (gData && typeof gData.count === 'number') {
-            groomScore = Math.max(groomScore, gData.count);
-          }
+        if (gData && typeof gData.value === 'number') {
+          groomScore = Math.max(groomScore, gData.value);
         }
         updateBattleBar();
         saveScoresToDB(brideScore, groomScore);
-      } catch (err) { }
+      } catch (err) {}
     }
 
     async function sendCheerToBackend(side) {
       saveScoresToDB(brideScore, groomScore);
 
-      // Send to Global Public API for instant cross-device tallying
+      // Hit Global CountAPI with JSONP
       try {
-        fetch(`${PUBLIC_GLOBAL_API}/${side}/up`).catch(() => { });
-      } catch (e) { }
+        jsonpFetch(`https://api.countapi.xyz/hit/${COUNTAPI_NAMESPACE}/${side}`);
+      } catch (e) {}
 
       // Send to Google Sheet if available
       if (CONFIG.googleSheetUrl) {
@@ -2001,10 +2049,10 @@
           fetch(CONFIG.googleSheetUrl, {
             method: 'POST',
             mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'text/plain' },
             body: JSON.stringify({ action: 'cheer', team: side, bride: brideScore, groom: groomScore })
-          }).catch(err => console.log('Sync cheer:', err));
-        } catch (err) { }
+          }).catch(() => {});
+        } catch (err) {}
       }
     }
 
