@@ -230,8 +230,10 @@
       position: relative;
       width: 50%;
       height: 100%;
-      background: radial-gradient(circle at 50% 30%, #4A0810, #180206 85%);
-      box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.95);
+      background-color: var(--bg-midnight);
+      background-image: radial-gradient(circle at 14px 14px, rgba(242, 184, 16, .2) 2px, transparent 3px), url('images/darbar_door1.png');
+      background-size: 44px 44px, 200% 100%;
+      box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.95);
       transition: transform 2.6s cubic-bezier(0.22, 1, 0.36, 1);
       display: flex;
       align-items: center;
@@ -240,22 +242,44 @@
       overflow: hidden;
     }
 
-    .door::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background-image: 
-        radial-gradient(circle at 14px 14px, rgba(242, 184, 16, 0.18) 2px, transparent 3px),
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cpath d='M20 0 L40 20 L20 40 L0 20 Z' fill='none' stroke='%23F2B810' stroke-opacity='0.08'/%3E%3C/svg%3E");
-      background-size: 36px 36px, 40px 40px;
-    }
-
     .door.l {
       border-right: 3px solid var(--gold-zari);
+      background-position: 0 0, left center;
     }
 
     .door.r {
       border-left: 3px solid var(--gold-zari);
+      background-position: 0 0, right center;
+    }
+
+    .door-name-plate {
+      position: relative;
+      z-index: 2;
+      background: rgba(20, 2, 5, 0.82);
+      backdrop-filter: blur(10px);
+      border: 1.5px solid var(--gold-zari);
+      border-radius: 14px;
+      padding: 1.2rem 0.9rem;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.9), inset 0 0 20px rgba(242, 184, 16, 0.25);
+    }
+
+    .door-name-plate .plate-title {
+      font-family: 'Great Vibes', cursive, 'Rozha One', serif;
+      font-size: 2.3rem;
+      color: var(--gold-pale);
+      text-shadow: 0 2px 12px rgba(0,0,0,0.9), 0 0 18px var(--gold-zari);
+      display: block;
+    }
+
+    .door-name-plate .plate-sub {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.52rem;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      color: var(--gold-zari);
+      text-transform: uppercase;
+      margin-top: 3px;
     }
 
     .door-frame {
@@ -271,24 +295,29 @@
       flex-direction: column;
       align-items: center;
       justify-content: space-between;
-      box-shadow: inset 0 0 25px rgba(242, 184, 16, 0.15), 0 0 15px rgba(0,0,0,0.8);
+      box-shadow: inset 0 0 25px rgba(242, 184, 16, 0.15), 0 0 15px rgba(0, 0, 0, 0.8);
       background: rgba(20, 2, 5, 0.45);
     }
 
     .door-bell {
       font-size: 1.6rem;
-      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.8)) drop-shadow(0 0 10px var(--gold-zari));
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 10px var(--gold-zari));
       animation: bellSwing 3s ease-in-out infinite alternate;
     }
 
     @keyframes bellSwing {
-      0% { transform: rotate(-8deg); }
-      100% { transform: rotate(8deg); }
+      0% {
+        transform: rotate(-8deg);
+      }
+
+      100% {
+        transform: rotate(8deg);
+      }
     }
 
     .door-emblem {
       font-size: 2.8rem;
-      filter: drop-shadow(0 6px 15px rgba(0,0,0,0.9));
+      filter: drop-shadow(0 6px 15px rgba(0, 0, 0, 0.9));
     }
 
     .door-label {
@@ -1424,24 +1453,20 @@
     <span class="mute-icon">🔇</span>
   </button>
 
-  <!-- Doors Intro -->
+  <!-- Doors Intro: South Indian Royal Darbar Entrance with Rohith & Sravani -->
   <div id="doors" onclick="unlockDoors(event)">
     <div class="door l">
-      <div class="door-frame">
-        <div class="door-bell">🔔</div>
-        <div class="door-studs"><span>•</span><span>•</span><span>•</span></div>
-        <div class="door-emblem">🪷</div>
-        <div class="door-label">WELCOME</div>
-        <div class="door-studs"><span>•</span><span>•</span><span>•</span></div>
+      <div class="door-name-plate">
+        <div style="font-size: 1.4rem; margin-bottom: 2px;">🐘</div>
+        <span class="plate-title">Rohith</span>
+        <span class="plate-sub">ROYAL DARBAR</span>
       </div>
     </div>
     <div class="door r">
-      <div class="door-frame">
-        <div class="door-bell">🔔</div>
-        <div class="door-studs"><span>•</span><span>•</span><span>•</span></div>
-        <div class="door-emblem">🦚</div>
-        <div class="door-label">INVITATION</div>
-        <div class="door-studs"><span>•</span><span>•</span><span>•</span></div>
+      <div class="door-name-plate">
+        <div style="font-size: 1.4rem; margin-bottom: 2px;">🦚</div>
+        <span class="plate-title">Sravani</span>
+        <span class="plate-sub">KALYANA MANDAPAM</span>
       </div>
     </div>
     <div id="sealWrap">
@@ -1670,7 +1695,8 @@
       <div class="card-temple-frame">
         <p class="sec-sub">Venue &amp; Location</p>
         <h2 class="sec-heading">RK Function Hall</h2>
-        <p style="color: var(--text-muted); font-size: .88rem; margin-bottom: 1rem;">Near Sujatha Nagar, Visakhapatnam, Andhra Pradesh</p>
+        <p style="color: var(--text-muted); font-size: .88rem; margin-bottom: 1rem;">Near Sujatha Nagar, Visakhapatnam,
+          Andhra Pradesh</p>
         <div style="border-radius: 10px; overflow: hidden; border: 1.5px solid var(--gold-zari);"><iframe
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3798.56!2d83.2107889!3d17.7977745!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a39675049b1fc61%3A0x33da12f3e5df7e2c!2sRK%20function%20hall!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
             width="100%" height="220" style="border:0;" loading="lazy"></iframe></div>
