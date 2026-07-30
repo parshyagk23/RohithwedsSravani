@@ -1951,26 +1951,31 @@
 
     // Fetch live scores from Global API / Google Sheet Endpoint
     async function fetchLiveScores() {
+      // Skip network fetch if running off local file:// protocol to avoid browser CORS logs
+      if (window.location.protocol === 'file:') return;
+
       // 1. Try Google Sheet if configured
       if (CONFIG.googleSheetUrl) {
         try {
-          const res = await fetch(CONFIG.googleSheetUrl + '?action=getScores');
-          const data = await res.json();
-          if (data && typeof data.bride === 'number' && typeof data.groom === 'number') {
-            brideScore = data.bride;
-            groomScore = data.groom;
-            updateBattleBar();
-            saveScoresToDB(brideScore, groomScore);
-            return;
+          const res = await fetch(CONFIG.googleSheetUrl + '?action=getScores', { mode: 'cors' });
+          if (res.ok) {
+            const data = await res.json();
+            if (data && typeof data.bride === 'number' && typeof data.groom === 'number') {
+              brideScore = data.bride;
+              groomScore = data.groom;
+              updateBattleBar();
+              saveScoresToDB(brideScore, groomScore);
+              return;
+            }
           }
         } catch (err) { }
       }
 
-      // 2. Global Public Realtime API (works across ALL guest devices worldwide out-of-the-box!)
+      // 2. Global Public Realtime API (works across ALL guest devices worldwide when hosted)
       try {
         const [bRes, gRes] = await Promise.all([
-          fetch(PUBLIC_GLOBAL_API + '/bride').catch(() => null),
-          fetch(PUBLIC_GLOBAL_API + '/groom').catch(() => null)
+          fetch(PUBLIC_GLOBAL_API + '/bride', { mode: 'cors' }).catch(() => null),
+          fetch(PUBLIC_GLOBAL_API + '/groom', { mode: 'cors' }).catch(() => null)
         ]);
         if (bRes && bRes.ok) {
           const bData = await bRes.json();
@@ -1986,9 +1991,7 @@
         }
         updateBattleBar();
         saveScoresToDB(brideScore, groomScore);
-      } catch (err) {
-        console.log('Global API sync:', err);
-      }
+      } catch (err) { }
     }
 
     async function sendCheerToBackend(side) {
