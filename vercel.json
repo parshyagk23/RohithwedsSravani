@@ -2,10 +2,11 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
   "trailingSlash": false,
-  "rewrites": [
+  "redirects": [
     {
       "source": "/",
-      "destination": "/south-indian-royal-mandap.html"
+      "destination": "/south-indian-royal-mandap.html",
+      "permanent": false
     }
   ]
 }
