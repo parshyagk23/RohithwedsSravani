@@ -232,21 +232,33 @@
       height: 100%;
       background-color: var(--bg-midnight);
       background-image: radial-gradient(circle at 14px 14px, rgba(242, 184, 16, .2) 2px, transparent 3px), url('images/darbar_door1.png');
-      background-size: 44px 44px, auto 100%;
+      background-size: 44px 44px, 200% 100%;
       background-repeat: repeat, no-repeat;
-      box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.95);
+      box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.85);
       transition: transform 2.6s cubic-bezier(0.22, 1, 0.36, 1);
       overflow: hidden;
     }
 
     .door.l {
       border-right: 2px solid var(--gold-zari);
-      background-position: 0 0, left center;
+      background-position: 0 0, left top;
     }
 
     .door.r {
       border-left: 2px solid var(--gold-zari);
-      background-position: 0 0, right center;
+      background-position: 0 0, right top;
+    }
+
+    @media (max-width: 600px) {
+      .door {
+        background-size: 44px 44px, 240% 100% !important;
+      }
+      .door.l {
+        background-position: 0 0, left top !important;
+      }
+      .door.r {
+        background-position: 0 0, right top !important;
+      }
     }
 
     .door-frame {
