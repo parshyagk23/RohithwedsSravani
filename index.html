@@ -1825,10 +1825,14 @@
       startPetals();
     }
 
-    // Force play audio unmuted on ANY user interaction
-    function forcePlayAudio() {
-      const bgMusic = document.getElementById('bgMusic');
+    let userMuted = false;
+
+    // Force play audio unmuted on ANY user interaction (except when user manually muted)
+    function forcePlayAudio(e) {
+      if (userMuted) return;
       const audioBtn = document.getElementById('audioToggle');
+      if (e && e.target && audioBtn && audioBtn.contains(e.target)) return; // skip toggle button clicks
+      const bgMusic = document.getElementById('bgMusic');
       if (bgMusic && bgMusic.paused) {
         bgMusic.muted = false;
         bgMusic.play().then(() => {
@@ -1845,13 +1849,17 @@
     // Audio Toggle Button Event Handler
     const audioBtn = document.getElementById('audioToggle');
     if (audioBtn) {
-      audioBtn.addEventListener('click', () => {
+      audioBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
         const bgMusic = document.getElementById('bgMusic');
         if (!bgMusic) return;
         if (bgMusic.paused) {
+          userMuted = false;
+          bgMusic.muted = false;
           bgMusic.play();
           audioBtn.classList.remove('paused');
         } else {
+          userMuted = true;
           bgMusic.pause();
           audioBtn.classList.add('paused');
         }
